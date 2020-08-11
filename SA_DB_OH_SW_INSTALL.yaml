@@ -1,0 +1,5 @@
+---
+ - hosts: '{{ hostname }}'
+   gather_facts: yes
+   roles:
+        - SA_DB_OH_SW_INSTALL
