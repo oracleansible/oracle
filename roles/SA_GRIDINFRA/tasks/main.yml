@@ -101,7 +101,7 @@
     tags: stagedir
 
   - name: install-home-db | copy Binary to destinations
-    copy: src=/home/sangeetha/database/config/oracle/{{ item }} dest={{ oracle_stage }} owner={{ grid_install_user }}  group={{ oracle_group }} mode=775
+    copy: src=/home/config/{{ item }} dest={{ oracle_stage }} owner={{ grid_install_user }}  group={{ oracle_group }} mode=775
     with_items:
             - linuxx64_12201_grid_home.zip
     become_user: "{{ grid_install_user }}"
