@@ -57,16 +57,32 @@ SA_OH_SW_INSTALL.yaml:
  ==================
           This playbook will create the database using the response file in the location /home/config/*.rsp. 
           
- 
+asmconfigure.yml:
+=================
+        ASM LIB configuration and disk creation
+
+Note:
+=====
+         Edit the path and the diskname as per your environment
+
+Command to create disk:
+
+            oracleasm createdisk {{ disk }} {{ path }}                                        ###  Disk creation. Replace disk with  "diskname" and path with "partitioneddisks".
+            oracleasm listdisk                                                                ###  List the disks
+            oracleasm scandisk                                                                ###  Identify the disk
+                     
  Response file location :  /home/config/
  
- Sample user input: /home/info.ini
+ Sample user input      : /home/info.ini
+ 
+ 
  
 Note:
  
     Edit the response file based on the requirement.
     User input should be in /tmp/info.ini. Please do changes based on your requirement.
-                     
+    
+
                    
 
             
