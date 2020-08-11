@@ -1,7 +1,7 @@
 ---
 
 - name: install-home-db | copy Binary to destinations
-  copy: src=/home/sangeetha/database/config/oracle/{{ item }} dest={{ oracle_stage }} owner=oracle group=oinstall mode=775
+  copy: src=/home/config/{{ item }} dest={{ oracle_stage }} owner=oracle group=oinstall mode=775
   with_items:
         - linuxx64_12201_database.zip
   tags:
@@ -51,8 +51,7 @@
   tags: create_db,dotprofile_db
 
 - name: copy of SADBSW responsefile
-  copy: src=/home/sangeetha/database/config/oracle/oracle_12.2.0.1.rsp dest={{ oracle_rsp_stage }}  owner=oracle group=oinstall mode=775
-     #     become: yes
+  copy: src=/home/config/oracle_12.2.0.1.rsp dest={{ oracle_rsp_stage }}  owner=oracle group=oinstall mode=775
   tags: sadbswrsp copy
   register: sadbswrspcpy
 - debug:
