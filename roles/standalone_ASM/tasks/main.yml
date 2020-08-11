@@ -1,33 +1,5 @@
 ---
 
-  - name: copy install asm pkg
-    copy: src=/home/config/{{ item }} dest={{ oracle_stage }} owner=root group=root mode=775
-    with_items:
-      - oracleasmlib-2.0.12-1.el7.x86_64.rpm
-      - oracleasm-support-2.1.11-2.el7.x86_64.rpm
-    ignore_errors: yes
-    tags:
-      - asmpkg
-
-  - name: install asm pkg
-    yum:
-        name: /home/stage/oracleasmlib-2.0.12-1.el7.x86_64.rpm
-        state: present
-    tags:
-      - asmpkginstall
-
-  - name: install asm package
-    yum:
-        name: /home/stage/oracleasm-support-2.1.11-2.el7.x86_64.rpm
-        state: present
-    tags:
-      - asmpkginstall1
-
-
-  - name: changing permission
-    shell: chown -R grid:oinstall {{ oracle_home_gi }}
-    become: yes
-
   - name: install-home-gi | Install cvuqdisk rpm
     yum: name="{{ oracle_home_gi }}/cv/rpm/{{ cvuqdisk_rpm }}" state=present
     tags: cvuqdisk
