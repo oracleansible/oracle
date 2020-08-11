@@ -1,7 +1,7 @@
 ---
 
 - name: copy of SAasmdbca responsefile
-  copy: src=/home/sangeetha/database/config/oracle/SA_ASM_dbca.rsp dest={{ oracle_rsp_stage  }} owner=oracle group=oinstall mode=775
+  copy: src=/home/config/SA_ASM_dbca.rsp dest={{ oracle_rsp_stage  }} owner=oracle group=oinstall mode=775
   register: saasmdbcarsp
   tags: saasmdbcarsp copy
 - debug:
