@@ -6,7 +6,7 @@ Code is for Standalone Oracle ASM Installation with database creation for instan
 
  Prerequisite:
  =============
-           Cent OS 7.7
+           Oracle Linux 7.7
            Disk should be created prior to the lib configuration.
            Systems with 2 GB to 16 GB RAM, use swap space equal to RAM.
            Download the grid & Db software and keep it in /home/config/
