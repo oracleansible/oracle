@@ -1,0 +1,18 @@
+---
+
+- name: copy of SAasmdbca responsefile
+  copy: src=/home/sangeetha/database/config/oracle/SA_ASM_dbca.rsp dest={{ oracle_rsp_stage  }} owner=oracle group=oinstall mode=775
+  register: saasmdbcarsp
+  tags: saasmdbcarsp copy
+- debug:
+        var: saasmdbcarsp
+
+- name: creating database
+  command: "{{ oracle_home_db }}/bin/dbca -silent -createDatabase -responseFile {{ oracle_rsp_stage }}/'SA_ASM_dbca.rsp' -ignorePreReqs "
+  become: yes
+  become_user: oracle
+  #  ignore_errors: true
+  register: saasmdbcreate
+  tags: RAC Database creation
+- debug:
+        var: saasmdbcreate
