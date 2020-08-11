@@ -1,0 +1,5 @@
+---
+ - hosts: '{{ hostname }}'
+   gather_facts: yes
+   roles:
+         - SA_ASM_DB_CREATE
