@@ -1,0 +1,69 @@
+---
+- hosts: '{{ hostname }}'
+  gather_facts: yes
+  tasks:
+
+
+  - name:         Get Oracle ASMLib Driver Configuration
+    command:      /usr/sbin/oracleasm configure
+    become: yes
+    register:     oasm_config
+    changed_when: false
+
+  - debug:
+      var:        oasm_config
+
+  - name:         Set Owner for Oracle ASMLib Driver
+    command:      oracleasm configure -u grid
+    become: yes
+    when:         oasm_config.stdout_lines[1] != "ORACLEASM_UID=grid"
+
+  - name:         Set Group for Oracle ASMLib Driver
+    become: yes
+    command:      oracleasm configure -g asmadmin
+    when:         oasm_config.stdout_lines[2] != "ORACLEASM_GID=asmadmin"
+
+  - name:         Enable Oracle ASMLib Driver
+    command:      oracleasm configure -e
+    become: yes
+    when:         oasm_config.stdout_lines[0] == "ORACLEASM_ENABLED=false"
+
+  - name:         Enable Oracle ASMLib Driver
+    command:      oracleasm createdisk  "{{ oasm_disk.disk }}" "{{ oasm_disk.path }}"
+    with_items:
+       - { path: /dev/sdb1, disk: CRS01 }
+       - { path: /dev/sdc1, disk: DATA01 }
+       - { path: /dev/sdd1, disk: FRA01 }
+    become: yes
+    register:     diskcreation
+    loop_control:
+      loop_var: oasm_disk
+
+  - name:         Check Oracle ASMLib Driver Status
+    command:      /usr/sbin/oracleasm exit
+    register:     oasm_status_exit
+    changed_when: false
+    failed_when:  false
+    no_log:       true
+
+  - debug:
+      var:         oasm_status_exit
+
+  - name:         Load and initialize Oracle ASMLib Driver
+    command:      /usr/sbin/oracleasm init
+
+  - name:         Verify Oracle ASMLib Driver is loaded and initialized
+    command:      /usr/sbin/oracleasm status
+    register:     oasm_status_driver
+    changed_when: false
+  - debug:
+      var:         oasm_status_driver
+
+  - name:         Verify Oracle ASMLib Driver is loaded and initialized
+    command:      oracleasm scandisks
+    become: yes
+    register:     oasm_status_sd
+
+  - debug:
+      var:         oasm_status_sd
+
