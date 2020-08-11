@@ -1,0 +1,106 @@
+---
+
+  - name: copy install asm pkg
+    copy: src=/home/sangeetha/database/config/oracle/{{ item }} dest={{ oracle_stage }} owner=root group=root mode=775
+    with_items:
+      - oracleasmlib-2.0.12-1.el7.x86_64.rpm
+      - oracleasm-support-2.1.11-2.el7.x86_64.rpm
+    ignore_errors: yes
+    tags:
+      - asmpkg
+
+  - name: install asm pkg
+    yum:
+        name: /home/stage/oracleasmlib-2.0.12-1.el7.x86_64.rpm
+        state: present
+    tags:
+      - asmpkginstall
+
+  - name: install asm package
+    yum:
+        name: /home/stage/oracleasm-support-2.1.11-2.el7.x86_64.rpm
+        state: present
+    tags:
+      - asmpkginstall1
+
+
+  - name: changing permission
+    shell: chown -R grid:oinstall {{ oracle_home_gi }}
+    become: yes
+
+  - name: install-home-gi | Install cvuqdisk rpm
+    yum: name="{{ oracle_home_gi }}/cv/rpm/{{ cvuqdisk_rpm }}" state=present
+    tags: cvuqdisk
+    register: cvuqdiskrpminstall
+    ignore_errors: yes
+  - debug:
+          var: cvuqdiskrpminstall
+
+  - name: copy grid response file
+    copy: src=/home/sangeetha/database/config/oracle/grid12casm.rsp dest={{ oracle_rsp_stage }} owner=grid group=oinstall mode=775
+    become_user: "{{ grid_install_user }}"
+    tags:
+      - gridresponsefilecopy
+
+
+  - name: install-home-gi | Install Grid Infrastructure
+    command: "{{ oracle_home_gi }}/gridSetup.sh  -responseFile {{ oracle_rsp_stage }}/'grid12casm.rsp'  -waitforcompletion -ignorePrereq -silent"
+    become: yes
+    become_user: "{{ grid_install_user }}"
+    run_once: "{{ configure_cluster}}"
+    tags:
+       - oragridinstall
+    register: giinstall
+    ignore_errors: yes
+  - debug:
+     var: giinstall
+
+  - name: install-home-gi | run as grid user setup script
+    command: "{{ oracle_home_gi }}/gridSetup.sh -executeConfigTools -responseFile {{ oracle_rsp_stage }}/'grid12casm.rsp' -silent"
+    become: yes
+    ignore_errors: yes
+    become_user: "{{ grid_install_user }}"
+    register: girootscript
+  - debug:
+          var: girootscript
+
+  - name: install-home-gi | run as root root.sh script
+    command: "{{ oracle_home_gi }}/root.sh"
+    become: yes
+    become_user: root
+    register: girootsh
+  - debug:
+          var: girootsh
+
+  - name: install-home-gi | create ASM
+    command: "{{ oracle_home_gi }}/bin/asmca -silent -configureASM -diskString {{ oracle_asm_disk_string }} -sysAsmPassword Oracle123 -asmsnmpPassword Oracle123  -diskGroupName {{ item }} -diskList '/dev/oracleasm/disks/{{ item }}01' -redundancy EXTERNAL"
+    with_items:
+          - CRS
+    become: yes
+    become_user: "{{ grid_install_user }}"
+    register: asmcreation
+    tags: createasm
+  - debug:
+       var: asmcreation
+
+  - name: ASM diskgroup creation
+    command: "{{ oracle_home_gi }}/bin/asmca -silent -createDiskGroup  -diskString {{ oracle_asm_disk_string }} -sysAsmPassword Oracle123 -asmsnmpPassword Oracle123  -diskGroupName {{ item }} -diskList '/dev/oracleasm/disks/{{ item }}01' -redundancy EXTERNAL"
+    with_items:
+         - DATA
+         - FRA
+    become: yes
+    become_user: grid
+    tags: creatediskgroup
+    register: diskgroupcreation
+  - debug:
+         var: diskgroupcreation
+
+  - name:         Verify Oracle ASMLib Driver is loaded and initialized
+    command:      oracleasm scandisks
+    become: yes
+    register:     oasm_status_sd
+
+  - debug:
+      var:         oasm_status_sd
+
+
