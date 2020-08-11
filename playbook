@@ -1,5 +1,0 @@
----
- - hosts: '{{ hostname }}'
-   gather_facts: yes
-   roles:
-       - SA_GRIDINFRA
