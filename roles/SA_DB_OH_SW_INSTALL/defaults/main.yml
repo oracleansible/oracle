@@ -1,0 +1,13 @@
+---
+
+   oracle_base         : "{{ lookup('ini', 'oracle_base             section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_inventory_loc: "{{ lookup('ini', 'oracle_inventory_loc    section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_inventory    : "{{ lookup('ini', 'oracle_inventory        section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_stage        : "{{ lookup('ini', 'oracle_stage            section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_home_gi      : "{{ lookup('ini', 'oracle_home_gi          section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_home_db      : "{{ lookup('ini', 'oracle_home_db          section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_user         : oracle
+   oracle_group        : oinstall
+   oracle_rsp_stage    : "{{ oracle_stage }}/rsp"
+   configure_cluster   : false
+   oracle_profile_name : ".profile_{{oracle_user}}"
