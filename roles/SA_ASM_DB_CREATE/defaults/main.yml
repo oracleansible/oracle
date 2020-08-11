@@ -1,0 +1,5 @@
+---
+
+    oracle_stage        : "{{ lookup('ini', 'oracle_stage            section=standalone_asm       file=/tmp/info.ini') }}"
+    oracle_home_db      : "{{ lookup('ini', 'oracle_home_db          section=standalone_asm       file=/tmp/info.ini') }}"
+    oracle_rsp_stage    : "{{ oracle_stage }}/rsp"
