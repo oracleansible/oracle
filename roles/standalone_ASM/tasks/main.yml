@@ -1,7 +1,7 @@
 ---
 
   - name: copy install asm pkg
-    copy: src=/home/sangeetha/database/config/oracle/{{ item }} dest={{ oracle_stage }} owner=root group=root mode=775
+    copy: src=/home/config/{{ item }} dest={{ oracle_stage }} owner=root group=root mode=775
     with_items:
       - oracleasmlib-2.0.12-1.el7.x86_64.rpm
       - oracleasm-support-2.1.11-2.el7.x86_64.rpm
@@ -37,7 +37,7 @@
           var: cvuqdiskrpminstall
 
   - name: copy grid response file
-    copy: src=/home/sangeetha/database/config/oracle/grid12casm.rsp dest={{ oracle_rsp_stage }} owner=grid group=oinstall mode=775
+    copy: src=/home/config/grid12casm.rsp dest={{ oracle_rsp_stage }} owner=grid group=oinstall mode=775
     become_user: "{{ grid_install_user }}"
     tags:
       - gridresponsefilecopy
