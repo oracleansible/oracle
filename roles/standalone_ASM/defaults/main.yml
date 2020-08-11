@@ -1,0 +1,39 @@
+---
+   oracle_groups:
+      - { group: asmdba, gid: 54318 }
+      - { group: asmoper, gid: 54319 }
+      - { group: asmadmin, gid: 54320 }
+      - { group: oinstall, gid: 54321 }
+      - { group: dba, gid: 54322 }
+      - { group: backupdba, gid: 54323 }
+      - { group: oper, gid: 54324 }
+      - { group: dgdba, gid: 54325 }
+      - { group: kmdba, gid: 54326 }
+
+   oracle_user         : oracle
+   grid_user           : grid
+   oracle_user_home    : "/home/{{ oracle_user }}" # Home directory for oracle_user. Needed for passing in ssh-keys, profiles etc
+   grid_user_home      : "/home/{{ grid_install_user }}" # Home directory for oracle_user. Needed for passing in ssh-keys, profiles etc
+   oracle_group        : oinstall    #  # Primary group for oracle_user.
+
+   oper_group          : oper
+   dba_group           : dba
+   asmoper_group       : asmoper
+   asmdba_group        : asmdba
+   asmadmin_group      : asmadmin
+   oracle_group        : oinstall
+   grid_install_user   : grid
+   oracle_base         : "{{ lookup('ini', 'oracle_base             section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_inventory_loc: "{{ lookup('ini', 'oracle_inventory_loc    section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_inventory    : "{{ lookup('ini', 'oracle_inventory        section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_stage        : "{{ lookup('ini', 'oracle_stage            section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_home_gi      : "{{ lookup('ini', 'oracle_home_gi          section=standalone_asm       file=/tmp/info.ini') }}"
+   oracle_home_db      : "{{ lookup('ini', 'oracle_home_db          section=standalone_asm       file=/tmp/info.ini') }}"
+   cvuqdisk_rpm        : cvuqdisk-1.0.10-1.rpm
+   oracle_rsp_stage    : "{{ oracle_stage }}/rsp"
+   configure_cluster   : false
+
+   oracle_profile_name_gi: ".profile_grid"
+   oracle_asm_disk_string: /dev/oracleasm/disks/*
+
+
